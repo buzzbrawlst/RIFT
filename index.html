@@ -8,21 +8,66 @@
 </head>
 <body>
 <div id="lobby" class="screen">
-<div class="lobby-bg"></div>
-<header><div class="brand">RIFT <small>PIXEL ROYALE</small></div><div class="profile"><span id="level">LVL 1</span><span id="coins">🪙 500</span></div></header>
-<main class="lobby-main">
-<section class="hero-card"><div class="pixel-avatar large" id="lobbyAvatar"></div><div><p class="eyebrow">WELCOME BACK</p><h1>RIFT PLAYER</h1><p class="muted">Choose a mode and drop in.</p></div></section>
-<section class="mode-area"><div class="section-title">GAME MODES</div><div class="mode-grid">
-<button class="mode-card active" data-mode="royale"><b>⚡ BATTLE ROYALE</b><span>Solo survival • loot • storm</span></button>
-<button class="mode-card" data-mode="duel"><b>⚔️ 1V1 DUEL</b><span>Small arena • first elimination wins</span></button>
-<button class="mode-card" data-mode="build"><b>🏗️ BUILD FIGHT</b><span>Build • edit • fight</span></button>
-<button class="mode-card" data-mode="rumble"><b>💥 TEAM RUMBLE</b><span>Respawns • first team to 10 KOs</span></button>
-</div><button id="playBtn" class="play-btn">PLAY <span>›</span></button></section>
-<section class="quick-row"><button data-screen="locker">🎒 LOCKER</button><button data-screen="shop">🛒 SHOP</button><button data-screen="settings">⚙️ SETTINGS</button></section>
-</main><footer><span>RIFT • MOBILE READY</span><span>NO DOWNLOAD</span></footer>
+  <div class="pixel-world" aria-hidden="true">
+    <div class="sky-grid"></div>
+    <div class="sun"></div>
+    <div class="cloud cloud-a"></div><div class="cloud cloud-b"></div>
+    <div class="mountain mountain-back"></div><div class="mountain mountain-mid"></div>
+    <div class="pine pine-a"></div><div class="pine pine-b"></div><div class="pine pine-c"></div>
+    <div class="ground"></div>
+    <div class="platform"></div>
+    <div class="grass grass-a"></div><div class="grass grass-b"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="brand-block"><div class="brand">RIFT</div><small>PIXEL ROYALE</small></div>
+    <div class="profile">
+      <span id="level">LVL 1</span>
+      <span id="coins">🪙 500</span>
+    </div>
+  </header>
+
+  <main class="lobby-main">
+    <section class="character-stage">
+      <div class="stage-label">READY TO DROP</div>
+      <div class="character-shadow"></div>
+      <div class="pixel-avatar large lobby-character" id="lobbyAvatar"></div>
+      <div class="character-glow"></div>
+      <div class="stage-tag">RIFT PLAYER</div>
+    </section>
+
+    <section class="mode-area">
+      <div class="section-title">SELECT GAME MODE</div>
+      <div class="mode-grid">
+        <button class="mode-card active" data-mode="royale"><b>BATTLE ROYALE</b><span>SOLO • SURVIVE • LOOT</span></button>
+        <button class="mode-card" data-mode="duel"><b>1V1 DUEL</b><span>FIRST ELIMINATION</span></button>
+        <button class="mode-card" data-mode="build"><b>BUILD FIGHT</b><span>BUILD • EDIT • FIGHT</span></button>
+        <button class="mode-card" data-mode="rumble"><b>TEAM RUMBLE</b><span>RESPAWNS • TEAM KOs</span></button>
+      </div>
+      <button id="playBtn" class="play-btn">PLAY <span>▶</span></button>
+    </section>
+
+    <section class="quick-row">
+      <button data-screen="locker">LOCKER</button>
+      <button data-screen="shop">ITEM SHOP</button>
+      <button data-screen="settings">SETTINGS</button>
+    </section>
+  </main>
+  <footer><span>RIFT • MOBILE READY</span><span>SEASON 01</span></footer>
 </div>
-<div id="locker" class="screen panel-screen hidden"><div class="panel-head"><button class="back">‹</button><h2>LOCKER</h2><span></span></div><div class="locker-content"><div class="preview-card"><div id="lockerAvatar" class="pixel-avatar huge"></div><h2 id="skinName">RIFT DEFAULT</h2></div><div><p class="section-title">OUTFITS</p><div id="skinGrid" class="item-grid"></div></div></div></div>
-<div id="shop" class="screen panel-screen hidden"><div class="panel-head"><button class="back">‹</button><h2>ITEM SHOP</h2><span>🪙 <b id="shopCoins">500</b></span></div><div class="shop-banner"><b>PIXEL DROP</b><span>Cosmetics and useful match items.</span></div><div id="shopGrid" class="item-grid shop-grid"></div></div>
-<div id="settings" class="screen panel-screen hidden"><div class="panel-head"><button class="back">‹</button><h2>SETTINGS</h2><span></span></div><div class="settings-list"><button class="toggle on" data-setting="vibration">Vibration <b>ON</b></button><button class="toggle on" data-setting="damage">Damage numbers <b>ON</b></button><button class="toggle on" data-setting="pixel">Pixel mode <b>ON</b></button><button class="reset" id="resetData">Reset local progress</button></div></div>
+
+<div id="locker" class="screen panel-screen hidden">
+  <div class="panel-head"><button class="back">‹</button><h2>LOCKER</h2><span></span></div>
+  <div class="locker-content"><div class="preview-card"><div id="lockerAvatar" class="pixel-avatar huge"></div><h2 id="skinName">RIFT DEFAULT</h2></div><div><p class="section-title">OUTFITS</p><div id="skinGrid" class="item-grid"></div></div></div>
+</div>
+<div id="shop" class="screen panel-screen hidden">
+  <div class="panel-head"><button class="back">‹</button><h2>ITEM SHOP</h2><span>🪙 <b id="shopCoins">500</b></span></div>
+  <div class="shop-banner"><b>PIXEL DROP</b><span>Cosmetics and useful match items.</span></div><div id="shopGrid" class="item-grid shop-grid"></div>
+</div>
+<div id="settings" class="screen panel-screen hidden">
+  <div class="panel-head"><button class="back">‹</button><h2>SETTINGS</h2><span></span></div>
+  <div class="settings-list"><button class="toggle on" data-setting="vibration">Vibration <b>ON</b></button><button class="toggle on" data-setting="damage">Damage numbers <b>ON</b></button><button class="toggle on" data-setting="pixel">Pixel mode <b>ON</b></button><button class="reset" id="resetData">Reset local progress</button></div>
+</div>
 <script src="lobby.js"></script>
-</body></html>
+</body>
+</html>
