@@ -1,73 +1,95 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>RIFT — Pixel Royale</title>
-<link rel="stylesheet" href="style.css">
-</head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>RIFT — Battle Royale</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#070b16;color:#fff;font-family:Inter,system-ui,Arial,sans-serif}canvas{display:block}
+button{font:inherit;color:#fff;border:1px solid #ffffff33;background:#ffffff12;border-radius:8px;padding:10px 16px;cursor:pointer}button:hover{background:#ffffff25}
+#lobby{position:fixed;inset:0;z-index:20;overflow:hidden;background:linear-gradient(#162d55 0%,#6db7e9 48%,#77bf58 49%,#315d32 100%)}
+#lobby:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 70% 18%,#fff9 0 3%,transparent 15%),linear-gradient(155deg,transparent 55%,#214a2a 56% 67%,transparent 68%),linear-gradient(25deg,transparent 55%,#396d35 56% 69%,transparent 70%);opacity:.75}
+.ltop{height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:#07101ddd;backdrop-filter:blur(12px);position:relative;z-index:2}
+.logo{font-weight:1000;font-size:30px;letter-spacing:.16em}.profile{display:flex;gap:12px;align-items:center}.pill{padding:8px 13px;background:#0007;border:1px solid #fff2;border-radius:999px}
+.lmain{position:relative;z-index:2;height:calc(100% - 126px);display:grid;grid-template-columns:1fr 520px 1fr;align-items:center;padding:20px 4vw}
+.avatarWrap{text-align:center;align-self:center}.avatar{width:170px;height:250px;margin:auto;position:relative;filter:drop-shadow(0 25px 20px #0008);animation:bob 2.2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-9px)}}.head{width:58px;height:58px;border-radius:50%;background:#6d4b3c;margin:auto}.body{width:72px;height:92px;background:#675cff;border-radius:18px 18px 12px 12px;margin:5px auto}.leg{position:absolute;top:148px;width:26px;height:78px;background:#262b42;border-radius:10px}.leg.a{left:52px}.leg.b{right:52px}.arm{position:absolute;top:82px;width:22px;height:76px;background:#675cff;border-radius:12px}.arm.a{left:28px;transform:rotate(12deg)}.arm.b{right:28px;transform:rotate(-12deg)}
+.lcard{background:#06101dcc;border:1px solid #fff3;border-radius:18px;padding:22px;box-shadow:0 25px 70px #0006;backdrop-filter:blur(18px)}
+.kicker{font-size:12px;letter-spacing:.18em;color:#b8d8ff}.title{font-size:42px;font-weight:1000;margin:3px 0 16px}.modes{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mode{text-align:left}.mode b{display:block}.mode small{color:#b9c3d2}.mode.active{outline:2px solid #ffd447;background:#ffd44720}.play{width:100%;margin-top:14px;background:#ffd447;color:#17120a;border:0;font-size:24px;font-weight:1000;padding:15px;transform:skew(-4deg)}
+.lnav{display:flex;gap:8px;justify-content:center;margin-top:12px}.foot{height:50px;position:relative;z-index:2;display:flex;justify-content:space-between;padding:0 28px;align-items:center;color:#ffffffaa;font-size:12px}
+.panel{position:fixed;inset:0;z-index:30;background:#08101cf5;display:none;padding:60px 8vw}.panel h2{font-size:40px}.panelGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.close{position:absolute;right:28px;top:24px}
+#hud{position:fixed;inset:0;z-index:5;pointer-events:none;display:none;text-shadow:0 2px 4px #000}.hp{position:absolute;left:18px;bottom:18px}.bar{width:260px;height:12px;background:#0008;border:1px solid #fff3;margin:4px 0}.bar i{display:block;height:100%}.hot{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:5px}.hot b{padding:8px 10px;min-width:70px;text-align:center;background:#0009;border:2px solid #fff3;font-size:11px}.hot .on{border-color:#ffd447;background:#ffd44722}.top{position:absolute;top:14px;left:50%;transform:translateX(-50%);font-weight:800}.feed{position:absolute;right:15px;top:110px;text-align:right;font-size:13px}.cross{position:absolute;left:50%;top:50%;width:8px;height:8px;margin:-4px;border:2px solid white;border-radius:50%}
+#admin{position:fixed;z-index:40;left:50%;top:50%;transform:translate(-50%,-50%);display:none;width:350px;background:#05070ddd;border:1px solid #fff3;border-radius:14px;padding:18px;backdrop-filter:blur(15px);pointer-events:auto}#admin label{display:block;margin:9px 0}#admin input{float:right}
+#gameover{position:fixed;inset:0;z-index:50;display:none;place-items:center;background:#050811cc;backdrop-filter:blur(8px);text-align:center}.go{font-size:52px;font-weight:1000}.sub{color:#cbd5e1}
+@media(max-width:850px){.lmain{grid-template-columns:1fr}.avatarWrap{display:none}.lcard{max-width:520px;margin:auto}.lnav{display:none}.lmain{height:calc(100% - 126px)}}
+</style></head>
 <body>
-<div id="lobby" class="screen">
-  <div class="pixel-world" aria-hidden="true">
-    <div class="sky-grid"></div>
-    <div class="sun"></div>
-    <div class="cloud cloud-a"></div><div class="cloud cloud-b"></div>
-    <div class="mountain mountain-back"></div><div class="mountain mountain-mid"></div>
-    <div class="pine pine-a"></div><div class="pine pine-b"></div><div class="pine pine-c"></div>
-    <div class="ground"></div>
-    <div class="platform"></div>
-    <div class="grass grass-a"></div><div class="grass grass-b"></div>
-  </div>
-
-  <header class="topbar">
-    <div class="brand-block"><div class="brand">RIFT</div><small>PIXEL ROYALE</small></div>
-    <div class="profile">
-      <span id="level">LVL 1</span>
-      <span id="coins">🪙 500</span>
-    </div>
-  </header>
-
-  <main class="lobby-main">
-    <section class="character-stage">
-      <div class="stage-label">READY TO DROP</div>
-      <div class="character-shadow"></div>
-      <div class="pixel-avatar large lobby-character" id="lobbyAvatar"></div>
-      <div class="character-glow"></div>
-      <div class="stage-tag">RIFT PLAYER</div>
-    </section>
-
-    <section class="mode-area">
-      <div class="section-title">SELECT GAME MODE</div>
-      <div class="mode-grid">
-        <button class="mode-card active" data-mode="royale"><b>BATTLE ROYALE</b><span>SOLO • SURVIVE • LOOT</span></button>
-        <button class="mode-card" data-mode="duel"><b>1V1 DUEL</b><span>FIRST ELIMINATION</span></button>
-        <button class="mode-card" data-mode="build"><b>BUILD FIGHT</b><span>BUILD • EDIT • FIGHT</span></button>
-        <button class="mode-card" data-mode="rumble"><b>TEAM RUMBLE</b><span>RESPAWNS • TEAM KOs</span></button>
-      </div>
-      <button id="playBtn" class="play-btn">PLAY <span>▶</span></button>
-    </section>
-
-    <section class="quick-row">
-      <button data-screen="locker">LOCKER</button>
-      <button data-screen="shop">ITEM SHOP</button>
-      <button data-screen="settings">SETTINGS</button>
-    </section>
-  </main>
-  <footer><span>RIFT • MOBILE READY</span><span>SEASON 01</span></footer>
+<div id="lobby">
+ <div class="ltop"><div><div class="logo">RIFT</div><small>SEASON 01 • BATTLE ROYALE</small></div><div class="profile"><span class="pill">LVL 1</span><span class="pill">◈ 500</span></div></div>
+ <div class="lmain">
+  <div class="avatarWrap"><div class="avatar"><div class="head"></div><div class="body"></div><div class="arm a"></div><div class="arm b"></div><div class="leg a"></div><div class="leg b"></div></div><b>RIFT PLAYER</b><div style="color:#ffffff99">READY</div></div>
+  <div class="lcard"><div class="kicker">PLAY</div><div class="title">BATTLE ROYALE</div><div class="modes">
+   <button class="mode active" data-mode="royale"><b>SOLO</b><small>Last player standing</small></button>
+   <button class="mode" data-mode="build"><b>BUILD FIGHT</b><small>Build • edit • fight</small></button>
+   <button class="mode" data-mode="duel"><b>1V1 DUEL</b><small>Fast elimination</small></button>
+   <button class="mode" data-mode="rumble"><b>RUMBLE</b><small>Bot team battle</small></button>
+  </div><button id="play" class="play">PLAY ▶</button><div class="lnav"><button onclick="panel('locker')">LOCKER</button><button onclick="panel('shop')">ITEM SHOP</button><button onclick="panel('settings')">SETTINGS</button></div></div>
+  <div style="text-align:center;color:#fff9"><b>RIFT ISLAND</b><br><small>Dynamic storm • building • editing • AI combat</small></div>
+ </div><div class="foot"><span>WASD • SHIFT • SPACE • RMB AIM</span><span>F13 / ` ADMIN</span></div>
 </div>
-
-<div id="locker" class="screen panel-screen hidden">
-  <div class="panel-head"><button class="back">‹</button><h2>LOCKER</h2><span></span></div>
-  <div class="locker-content"><div class="preview-card"><div id="lockerAvatar" class="pixel-avatar huge"></div><h2 id="skinName">RIFT DEFAULT</h2></div><div><p class="section-title">OUTFITS</p><div id="skinGrid" class="item-grid"></div></div></div>
-</div>
-<div id="shop" class="screen panel-screen hidden">
-  <div class="panel-head"><button class="back">‹</button><h2>ITEM SHOP</h2><span>🪙 <b id="shopCoins">500</b></span></div>
-  <div class="shop-banner"><b>PIXEL DROP</b><span>Cosmetics and useful match items.</span></div><div id="shopGrid" class="item-grid shop-grid"></div>
-</div>
-<div id="settings" class="screen panel-screen hidden">
-  <div class="panel-head"><button class="back">‹</button><h2>SETTINGS</h2><span></span></div>
-  <div class="settings-list"><button class="toggle on" data-setting="vibration">Vibration <b>ON</b></button><button class="toggle on" data-setting="damage">Damage numbers <b>ON</b></button><button class="toggle on" data-setting="pixel">Pixel mode <b>ON</b></button><button class="reset" id="resetData">Reset local progress</button></div>
-</div>
-<script src="lobby.js"></script>
-</body>
-</html>
+<div id="locker" class="panel"><button class="close" onclick="panel()">CLOSE</button><h2>LOCKER</h2><div class="panelGrid"><button>RIFT DEFAULT<br>✓ EQUIPPED</button><button>VOID RUNNER<br>LOCKED</button><button>NEON RANGER<br>LOCKED</button></div></div>
+<div id="shop" class="panel"><button class="close" onclick="panel()">CLOSE</button><h2>ITEM SHOP</h2><div class="panelGrid"><button>VOID AXE<br>800 ◈</button><button>RIFT WRAP<br>500 ◈</button><button>STAR EMOTE<br>300 ◈</button></div></div>
+<div id="settings" class="panel"><button class="close" onclick="panel()">CLOSE</button><h2>SETTINGS</h2><p>Mouse sensitivity <input id="sens" type="range" min=".5" max="2.5" step=".1" value="1"></p><p>Bot accuracy <input id="acc" type="range" min=".2" max="1.5" step=".1" value=".75"></p></div>
+<div id="hud"><div class="top" id="top">0:00 • 24 ALIVE</div><div class="cross"></div><div class="feed" id="feed"></div><div class="hp"><div id="hptext">100 HP • 0 SHIELD</div><div class="bar"><i id="hpbar" style="background:#57df67;width:100%"></i></div><div class="bar"><i id="shbar" style="background:#42a5ff;width:0"></i></div></div><div class="hot" id="hot"></div></div>
+<div id="admin"><b>RIFT ADMIN</b><label>God mode <input id="god" type="checkbox"></label><label>Infinite ammo <input id="ammo" type="checkbox"></label><label>Infinite mats <input id="mats" type="checkbox"></label><label>Bot accuracy <input id="botacc" type="range" min=".1" max="1.5" step=".1" value=".75"></label><button onclick="spawnBots(5)">+5 BOTS</button> <button onclick="clearBots()">REMOVE BOTS</button></div>
+<div id="gameover"><div><div class="go" id="result">VICTORY ROYALE</div><div class="sub" id="resultSub"></div><br><button onclick="location.reload()">RETURN TO LOBBY</button></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const V=THREE.Vector3,scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(80,innerWidth/innerHeight,.1,700),ren=new THREE.WebGLRenderer({antialias:true});
+ren.setSize(innerWidth,innerHeight);ren.setPixelRatio(Math.min(devicePixelRatio,2));ren.shadowMap.enabled=true;document.body.appendChild(ren.domElement);
+scene.background=new THREE.Color(0x8dccff);scene.fog=new THREE.Fog(0x8dccff,90,420);scene.add(new THREE.HemisphereLight(0xffffff,0x557744,1));
+const sun=new THREE.DirectionalLight(0xfff0c8,1);sun.position.set(80,120,50);sun.castShadow=true;scene.add(sun);
+const island=new THREE.Mesh(new THREE.CircleGeometry(300,64),new THREE.MeshLambertMaterial({color:0x68b957}));island.rotation.x=-Math.PI/2;island.receiveShadow=true;scene.add(island);
+const water=new THREE.Mesh(new THREE.PlaneGeometry(3000,3000),new THREE.MeshLambertMaterial({color:0x237ac7}));water.rotation.x=-Math.PI/2;water.position.y=-.5;scene.add(water);
+const targets=[],pieces=[],bots=[],keys={},mouse={};let started=false,over=false,time=0,kills=0,selectedMode='royale';
+const player={pos:new V(0,0,0),vel:new V(),yaw:0,pitch:-.12,on:true,hp:100,shield:0,mats:{wood:300,brick:100,metal:50},weapon:1,dead:false};
+const W=[null,{name:'RIFT AR',damage:24,rate:.12,mag:30,res:180,spread:.018,range:170},{name:'PUMP',damage:12,rate:.8,mag:6,res:42,spread:.07,pellets:10,range:45},{name:'SNIPER',damage:90,rate:1.5,mag:1,res:18,spread:.003,range:400}];W.forEach(w=>{if(w){w.ammo=w.mag;w.cd=0}});
+const rc=new THREE.Raycaster(),matColor={wood:0xb57b43,brick:0xb64b40,metal:0x8793a3};
+function panel(id){document.querySelectorAll('.panel').forEach(x=>x.style.display='none');if(id)document.getElementById(id).style.display='block'}
+document.querySelectorAll('.mode').forEach(x=>x.onclick=()=>{document.querySelectorAll('.mode').forEach(y=>y.classList.remove('active'));x.classList.add('active');selectedMode=x.dataset.mode});
+document.getElementById('play').onclick=()=>startGame();
+function meshGuy(color){const g=new THREE.Group(),m=new THREE.MeshLambertMaterial({color});const body=new THREE.Mesh(new THREE.BoxGeometry(.65,1,.38),m);body.position.y=1.05;const head=new THREE.Mesh(new THREE.SphereGeometry(.23,10,8),m);head.position.y=1.72;g.add(body,head);for(const x of [-.18,.18]){const leg=new THREE.Mesh(new THREE.BoxGeometry(.16,.7,.16),m);leg.position.set(x,.45,0);g.add(leg)}return g}
+const pm=meshGuy(0x725cff);scene.add(pm);
+function addPiece(type,x,z,y,rot,owner='player'){const key=type+x+','+z+','+y+','+rot;if(pieces.find(p=>p.key===key))return;const m=new THREE.MeshLambertMaterial({color:matColor[owner==='player'?'wood':'brick']});let o;
+ if(type==='wall')o=new THREE.Mesh(new THREE.BoxGeometry(.35,4,4),m);else if(type==='floor')o=new THREE.Mesh(new THREE.BoxGeometry(4,.3,4),m);else{o=new THREE.Mesh(new THREE.BoxGeometry(4,.3,5.7),m);o.rotation.x=-Math.PI/4}
+ o.position.set(x,y+(type==='floor'?-.15:2),z);o.rotation.y=rot*Math.PI/2;o.castShadow=true;o.userData={kind:'piece',piece:null};scene.add(o);const p={key,type,x,z,y,rot,hp:owner==='player'?150:180,owner,mesh:o,edited:false};o.userData.piece=p;pieces.push(p);targets.push(o);return p}
+function editPiece(p){if(!p||p.type!=='wall')return; if(p.edited){p.mesh.scale.x=1;p.edited=false}else{p.mesh.scale.x=.42;p.edited=true}}
+function ground(x,z){let h=0;for(const p of pieces){if(p.type==='floor'&&Math.abs(x-p.x)<2&&Math.abs(z-p.z)<2)h=Math.max(h,p.y);if(p.type==='ramp'&&Math.abs(x-p.x)<2&&Math.abs(z-p.z)<2)h=Math.max(h,p.y+1)}return h}
+function move(e,dt,wx,wz,speed,jump){const a=Math.min(1,dt*10);e.vel.x+=(wx*speed-e.vel.x)*a;e.vel.z+=(wz*speed-e.vel.z)*a;e.vel.y-=24*dt;if(jump&&e.on){e.vel.y=9;e.on=false}e.pos.addScaledVector(e.vel,dt);const g=ground(e.pos.x,e.pos.z);if(e.pos.y<=g){e.pos.y=g;e.vel.y=0;e.on=true}else e.on=false;const r=Math.hypot(e.pos.x,e.pos.z);if(r>295){e.pos.x*=295/r;e.pos.z*=295/r}}
+function hurt(e,d,source){if(e.dead)return;if(e===player&&document.getElementById('god').checked)return;if(e.shield){const a=Math.min(e.shield,d);e.shield-=a;d-=a}e.hp-=d;if(e.hp<=0)die(e,source)}
+function die(e,source){e.dead=true;if(e===player){over=true;document.getElementById('result').textContent='ELIMINATED';document.getElementById('resultSub').textContent='You were eliminated after '+kills+' eliminations.';document.getElementById('gameover').style.display='grid';document.exitPointerLock()}else{scene.remove(e.mesh);const i=bots.indexOf(e);if(i>=0)bots.splice(i,1);if(source){source.kills=(source.kills||0)+1;if(source===player)kills++;feed((source.name||'RIFT PLAYER')+' eliminated '+e.name)}if(!bots.length&&!over)victory()}}
+function victory(){over=true;document.getElementById('result').textContent='VICTORY ROYALE';document.getElementById('resultSub').textContent=kills+' eliminations • '+Math.floor(time)+' seconds';document.getElementById('gameover').style.display='grid';document.exitPointerLock()}
+function feed(t){const d=document.createElement('div');d.textContent=t;document.getElementById('feed').prepend(d);setTimeout(()=>d.remove(),4000)}
+function spawnBots(n=12){for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,r=55+Math.random()*210,g=meshGuy(new THREE.Color().setHSL(Math.random(),.65,.52));const b={name:['Nova','Rook','Vex','Kilo','Jinx','Onyx','Echo','Pyre','Lynx','Zed'][bots.length%10],pos:new V(Math.cos(a)*r,0,Math.sin(a)*r),vel:new V(),yaw:0,pitch:0,on:true,hp:100,shield:0,mats:{wood:220,brick:80,metal:20},mesh:g,think:Math.random(),shot:.5+Math.random(),build:1+Math.random()*2,target:null,skill:.55+Math.random()*.35,kills:0};g.position.copy(b.pos);g.userData.bot=b;scene.add(g);targets.push(g);bots.push(b)}}
+function clearBots(){bots.forEach(b=>scene.remove(b.mesh));bots.length=0}
+function chooseTarget(b){let best=null,bd=1e9;const all=[player,...bots];for(const e of all){if(e===b||e.dead)continue;const d=b.pos.distanceTo(e.pos);if(d<bd){bd=d;best=e}}return best}
+function botShoot(b,t,dist){const acc=Math.min(1,Math.max(.1,+(document.getElementById('botacc').value||.75)*b.skill));const miss=.20+(1-acc)*.45;if(Math.random()<miss){tracer(b.pos.clone().add(new V(0,1.5,0)),t.pos.clone().add(new V((Math.random()-.5)*8,(Math.random()-.5)*5,(Math.random()-.5)*8),0xff6666);return}const a=b.pos.clone().add(new V(0,1.5,0)),aim=t.pos.clone().add(new V(0,1.2,0)),dir=aim.clone().sub(a).normalize();rc.set(a,dir);rc.far=dist;const hits=rc.intersectObjects(targets,true);const hit=hits.find(h=>{const u=h.object.userData;return u.bot===t||u.piece});tracer(a,hit?hit.point:aim,0xffdd66);if(hit&&hit.object.userData.bot===t)hurt(t,Math.max(4,10*acc),b);else if(!hit&&t===player)hurt(player,3,b)}
+function tracer(a,b,c){const l=new THREE.Line(new THREE.BufferGeometry().setFromPoints([a,b]),new THREE.LineBasicMaterial({color:c}));scene.add(l);setTimeout(()=>scene.remove(l),80)}
+function botAI(dt){for(const b of bots){if(b.dead)continue;b.think-=dt;b.shot-=dt;b.build-=dt;if(b.think<=0||!b.target||b.target.dead){b.think=1+Math.random()*1.5;b.target=chooseTarget(b)}const t=b.target;if(!t)continue;const dx=t.pos.x-b.pos.x,dz=t.pos.z-b.pos.z,d=Math.hypot(dx,dz)||1;let wx=dx/d,wz=dz/d;if(d<12){wx=-wx;wz=-wz}const str=Math.sin(time*1.7+b.pos.x)*.55;[wx,wz]=[wx-wz*str,wz+dx/d*str];const l=Math.hypot(wx,wz);move(b,dt,wx/l,wz/l,d>18?5.5:3.5,Math.random()<.006);b.yaw=Math.atan2(-dx,-dz);b.mesh.position.copy(b.pos);b.mesh.rotation.y=b.yaw;
+ if(b.build<=0&&d<45){b.build=1.7+Math.random()*2.4;const dir=Math.atan2(-dx,-dz),gx=Math.round((b.pos.x-Math.sin(dir)*3)/4)*4,gz=Math.round((b.pos.z-Math.cos(dir)*3)/4)*4;addPiece(Math.random()<.55?'wall':'ramp',gx,gz,Math.floor(b.pos.y/4)*4,Math.round(dir/(Math.PI/2)),'bot');if(Math.random()<.35){const ps=pieces.filter(p=>p.owner==='bot'&&p.x===gx&&p.z===gz);if(ps[0])setTimeout(()=>editPiece(ps[0]),500+Math.random()*700)}}
+ if(b.shot<=0&&d<100){b.shot=.35+Math.random()*.5;botShoot(b,t,d)}
+}}
+function startGame(){document.getElementById('lobby').style.display='none';document.getElementById('hud').style.display='block';started=true;spawnBots(selectedMode==='duel'?1:selectedMode==='build'?6:selectedMode==='rumble'?18:11);ren.domElement.requestPointerLock()}
+addEventListener('pointerlockchange',()=>{if(started&&!document.pointerLockElement&&!over)document.getElementById('hud').style.opacity=.35;else document.getElementById('hud').style.opacity=1});
+addEventListener('keydown',e=>{keys[e.code]=true;if(e.code==='F13'||e.code==='Backquote'){const a=document.getElementById('admin');a.style.display=a.style.display==='block'?'none':'block';if(a.style.display==='block')document.exitPointerLock()}if(e.code==='Escape'&&!document.pointerLockElement&&started&&!over)ren.domElement.requestPointerLock();if(e.code==='Digit1')player.weapon=1;if(e.code==='Digit2')player.weapon=2;if(e.code==='Digit3')player.weapon=3;if(e.code==='KeyR')reload();if(e.code==='KeyQ')buildMode=!buildMode;if(e.code==='KeyE')interactEdit()});
+addEventListener('keyup',e=>keys[e.code]=false);addEventListener('mousemove',e=>{if(document.pointerLockElement){const s=+(document.getElementById('sens').value||1);player.yaw-=e.movementX*.0022*s;player.pitch=Math.max(-1.4,Math.min(1.4,player.pitch-e.movementY*.0022*s))}});
+addEventListener('mousedown',e=>{mouse[e.button]=true;if(e.button===2)e.preventDefault()});addEventListener('mouseup',e=>mouse[e.button]=false);
+function reload(){const w=W[player.weapon];if(!w||w.ammo>=w.mag||w.res<=0)return;w.ammo=w.mag}
+let buildMode=false;
+function interactEdit(){const f=-Math.sin(player.yaw),z=-Math.cos(player.yaw);const p=pieces.find(x=>Math.hypot(x.x-(player.pos.x+f*4),x.z-(player.pos.z+z*4))<3);if(p)editPiece(p)}
+function fire(){const w=W[player.weapon];if(!w||w.cd>0)return;if(w.ammo<=0){reload();return}w.cd=w.rate;if(!document.getElementById('ammo').checked)w.ammo--;const pellets=w.pellets||1;for(let i=0;i<pellets;i++){const spread=w.spread*(mouse[2] ? .45:1),a=new V(-Math.sin(player.yaw),0,-Math.cos(player.yaw));const origin=player.pos.clone().add(new V(0,1.5,0));a.x+= (Math.random()-.5)*spread;a.y+=(Math.random()-.5)*spread;a.z+=(Math.random()-.5)*spread;a.normalize();rc.set(origin,a);rc.far=w.range;const h=rc.intersectObjects(targets,true)[0];const end=h?h.point:origin.clone().addScaledVector(a,w.range);tracer(origin,end,0xffdf55);if(h&&h.object.userData.bot)hurt(h.object.userData.bot,w.damage/(pellets>1?2.5:1),player);else if(h&&h.object.userData.piece){h.object.userData.piece.hp-=w.damage;if(h.object.userData.piece.hp<=0){scene.remove(h.object);pieces.splice(pieces.indexOf(h.object.userData.piece),1)}}}}
+function build(){const f=-Math.sin(player.yaw),z=-Math.cos(player.yaw),x=Math.round((player.pos.x+f*4)/4)*4,zz=Math.round((player.pos.z+z*4)/4)*4,y=Math.floor(player.pos.y/4)*4;addPiece(keys['KeyX']?'floor':keys['KeyC']?'ramp':'wall',x,zz,y,Math.round(player.yaw/(Math.PI/2)),'player')}
+let last=performance.now(),buildCd=0;
+function loop(now){requestAnimationFrame(loop);const dt=Math.min(.05,(now-last)/1000);last=now;if(started&&!over){time+=dt;const f=(keys['KeyW']?1:0)-(keys['KeyS']?1:0),s=(keys['KeyD']?1:0)-(keys['KeyA']?1:0),fx=-Math.sin(player.yaw),fz=-Math.cos(player.yaw),rx=Math.cos(player.yaw),rz=-Math.sin(player.yaw);let wx=fx*f+rx*s,wz=fz*f+rz*s,l=Math.hypot(wx,wz);if(l>1){wx/=l;wz/=l}move(player,dt,wx,wz,keys['ShiftLeft']?9:6.5,keys['Space']);if(mouse[0]&&buildMode){if(buildCd<=0){build();buildCd=.18}}else if(mouse[0]&&!buildMode)fire();buildCd-=dt;const w=W[player.weapon];W.forEach(x=>x&& (x.cd=Math.max(0,x.cd-dt)));botAI(dt);pm.position.copy(player.pos);pm.rotation.y=player.yaw;const look=new V(-Math.sin(player.yaw)*Math.cos(player.pitch),Math.sin(player.pitch),-Math.cos(player.yaw)*Math.cos(player.pitch)),target=player.pos.clone().add(new V(0,1.45,0)),want=target.clone().addScaledVector(look,-4);cam.position.lerp(want,.25);cam.lookAt(target);document.getElementById('hpbar').style.width=Math.max(0,player.hp)+'%';document.getElementById('shbar').style.width=Math.max(0,player.shield)+'%';document.getElementById('hptext').textContent=Math.ceil(player.hp)+' HP • '+Math.ceil(player.shield)+' SHIELD';document.getElementById('top').textContent=Math.floor(time/60)+':'+String(Math.floor(time%60)).padStart(2,'0')+' • '+(bots.length+1)+' ALIVE • '+kills+' ELIMS';document.getElementById('hot').innerHTML=[1,2,3].map(i=>'<b class="'+(i===player.weapon?'on':'')+'">'+i+' '+W[i].name+'<br>'+W[i].ammo+'/'+W[i].res+'</b>').join('')}}
+ren.render(scene,cam)}
+requestAnimationFrame(loop);addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();ren.setSize(innerWidth,innerHeight)});
+</script></body></html>
