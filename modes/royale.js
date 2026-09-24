@@ -1,5 +1,0 @@
-export const label="BATTLE ROYALE";export const objective="SURVIVE THE STORM";
-let s,api;
-export function init(state,helpers){s=state;api=helpers;s.player.x=1200;s.player.y=1200;s.storm={x:1200,y:1200,r:1050};for(let i=0;i<11;i++)helpers.spawnEnemy("enemy")}
-export function tick(dt){if(s.storm.r>240)s.storm.r-=4*dt;const d=Math.hypot(s.player.x-s.storm.x,s.player.y-s.storm.y);if(d>s.storm.r){s.player.health-=9*dt}if(s.enemies.filter(e=>!e.dead).length===0)api.end(true)}
-export function draw(ctx,cx,cy){ctx.save();ctx.fillStyle="rgba(48,133,205,.20)";ctx.beginPath();ctx.rect(0,0,innerWidth,innerHeight);ctx.arc(s.storm.x-cx,s.storm.y-cy,s.storm.r,0,Math.PI*2,true);ctx.fill("evenodd");ctx.strokeStyle="#78d5ff";ctx.lineWidth=4;ctx.beginPath();ctx.arc(s.storm.x-cx,s.storm.y-cy,s.storm.r,0,Math.PI*2);ctx.stroke();ctx.restore()}
