@@ -17,8 +17,60 @@ canvas{display:block}.h{position:fixed;pointer-events:none;text-shadow:0 1px 3px
 #f13{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:340px;padding:16px 18px;background:#050505d0;backdrop-filter:blur(14px);border:1px solid #fff3;border-radius:12px;display:none;z-index:9;font-size:13px}
 #f13 h3{margin:0 0 8px;letter-spacing:.2em}#f13 label{display:block;margin:4px 0}#f13 button{margin:3px 3px 0 0;background:#fff1;border:1px solid #fff3;color:#fff;padding:5px 8px;border-radius:6px;cursor:pointer}
 #menu button{margin:2px;background:#fff1;border:1px solid #fff3;color:#fff;padding:6px 10px;border-radius:6px;cursor:pointer}#menu input[type=range]{width:200px}#menu .it{padding:8px;margin:4px 0;background:#fff1;border:1px solid #fff3;cursor:grab}
+
+/* RIFT lobby */
+#lobby{position:fixed;inset:0;z-index:20;background:radial-gradient(circle at 75% 15%,#294b83 0,#111a32 35%,#070b16 72%);display:flex;flex-direction:column;overflow:hidden}
+#lobby:before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,#ffffff08 1px,transparent 1px);background-size:70px 70px;transform:skewY(-8deg);opacity:.35}
+.lnav{height:70px;display:flex;align-items:center;gap:10px;padding:0 28px;position:relative;z-index:2;background:#05070dcc;border-bottom:1px solid #ffffff18}
+.lbrand{font-size:25px;font-weight:950;letter-spacing:.16em;margin-right:24px}.lnav button,.lmode{border:0;background:transparent;color:#aeb9ce;font-weight:800;padding:12px 15px;cursor:pointer}.lnav button.on,.lnav button:hover{color:#fff;background:#ffffff10}
+.lbody{flex:1;display:grid;grid-template-columns:280px 1fr 330px;gap:20px;padding:28px;position:relative;z-index:2}
+.lpanel{background:#070b14b8;border:1px solid #ffffff18;border-radius:16px;backdrop-filter:blur(12px);padding:18px;box-shadow:0 18px 60px #0005}
+.partyTitle{font-size:12px;color:#8490a8;letter-spacing:.12em;font-weight:900}.party{display:flex;align-items:center;gap:12px;margin:14px 0;padding:10px;background:#ffffff08;border-radius:12px}.avatar{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#7a5cff,#2fd4ff);display:grid;place-items:center;font-weight:900}
+.lcenter{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}.season{font-size:12px;letter-spacing:.22em;color:#b7c7ff;font-weight:900}.lcenter h1{font-size:clamp(52px,8vw,100px);margin:8px 0;letter-spacing:.08em;line-height:.9;text-shadow:0 8px 35px #000}.sub{color:#aeb9ce;max-width:520px}
+.play{margin-top:28px;border:0;padding:18px 58px;background:#f4c542;color:#111;font-size:22px;font-weight:950;letter-spacing:.08em;clip-path:polygon(5% 0,100% 0,95% 100%,0 100%);cursor:pointer;box-shadow:0 12px 35px #f4c54233}.play:hover{filter:brightness(1.08);transform:translateY(-2px)}
+.queue{margin-top:12px;color:#7f8ba3;font-size:12px}.modeBox{margin-top:20px;width:min(520px,90%);display:grid;grid-template-columns:1fr 1fr;gap:8px}.mode{padding:13px;text-align:left;border:1px solid #ffffff15;background:#ffffff08;border-radius:10px;color:#cbd5e8;cursor:pointer}.mode.sel{border-color:#f4c542;background:#f4c54218;color:#fff}
+.card{padding:12px;margin-top:10px;background:#ffffff08;border:1px solid #ffffff12;border-radius:10px}.card b{display:block}.muted{color:#8290aa;font-size:12px}.lfooter{position:absolute;bottom:16px;left:28px;right:28px;color:#66738c;font-size:11px;z-index:2}
+@media(max-width:900px){.lbody{grid-template-columns:1fr}.lpanel:first-child,.lpanel:last-child{display:none}.lcenter{padding-top:8vh}.lnav{overflow:auto}.lnav button{white-space:nowrap}}
 </style></head><body>
-<div id="start" class="ov"><div><h1>RIFT</h1><p>Click to play. WASD move · Shift sprint · F crouch · Space jump · RMB aim<br>1-4 weapons (LMB fire, R reload) · 5 shield potion · 6 medkit<br>Q build mode · Z wall · X floor · C ramp · B material · LMB place (auto-rotates to facing)<br>Hold G on a wall: move mouse + hold LMB to select tiles, release G to confirm, R resets<br>Pickaxe (1) harvests trees and builds · F13 or ` opens admin panel · last one standing wins</p></div></div>
+<div id="start" style="display:none"></div>
+<div id="lobby">
+  <div class="lnav">
+    <div class="lbrand">RIFT</div>
+    <button class="on" onclick="lobbyTab('PLAY',this)">PLAY</button>
+    <button onclick="lobbyTab('BATTLE PASS',this)">BATTLE PASS</button>
+    <button onclick="lobbyTab('LOCKER',this)">LOCKER</button>
+    <button onclick="lobbyTab('ITEM SHOP',this)">ITEM SHOP</button>
+    <button onclick="lobbyTab('CAREER',this)">CAREER</button>
+    <button onclick="lobbyTab('SETTINGS',this)">SETTINGS</button>
+  </div>
+  <div class="lbody">
+    <div class="lpanel">
+      <div class="partyTitle">PARTY · 1/4</div>
+      <div class="party"><div class="avatar">R</div><div><b>RIFT PLAYER</b><div class="muted">Ready</div></div></div>
+      <div class="card"><b>Battle Royale</b><span class="muted">Solo · AI lobby</span></div>
+      <div class="card"><b>8 AI opponents</b><span class="muted">Bots can build, edit, rotate, fight and miss shots.</span></div>
+      <div class="card"><b>Storm enabled</b><span class="muted">Last player standing wins.</span></div>
+    </div>
+    <div class="lcenter">
+      <div class="season">PROJECT RIFT · BATTLE ROYALE</div>
+      <h1>READY?</h1>
+      <div class="sub">Drop in, gather materials, build, edit and outlast the lobby.</div>
+      <div class="modeBox">
+        <button class="mode sel" onclick="selectMode(this)">BATTLE ROYALE<br><span class="muted">Solo</span></button>
+        <button class="mode" onclick="selectMode(this)">PRACTICE<br><span class="muted">Free build</span></button>
+      </div>
+      <button class="play" onclick="beginGame()">PLAY</button>
+      <div class="queue" id="lobbyStatus">MATCHMAKING · 9 PLAYERS</div>
+    </div>
+    <div class="lpanel">
+      <div class="partyTitle">FEATURED</div>
+      <div class="card"><b>Advanced AI</b><span class="muted">Bots pick targets, strafe, jump, build cover, edit their builds and fight each other.</span></div>
+      <div class="card"><b>Combat simulation</b><span class="muted">Weapon distance, spread and reaction delay make shots imperfect.</span></div>
+      <div class="card"><b>F13 ADMIN</b><span class="muted">Open the admin panel in-game.</span></div>
+    </div>
+  </div>
+  <div class="lfooter">WASD · SHIFT · SPACE · F · RMB · 1–6 · Q/Z/X/C/V/B · G EDIT · F13 ADMIN</div>
+</div>
 <div id="end" class="ov" style="display:none"><div><h1 id="et"></h1><button onclick="location.reload()" style="padding:10px 20px">Play again</button></div></div>
 <div id="cr" class="h"></div><div id="edit" class="h"></div>
 <div class="h" style="left:16px;bottom:16px"><div id="hp" style="font-size:12px">HP</div><div class="bar"><i id="hpb" style="background:#5f5;width:100%"></i></div><div class="bar"><i id="shb" style="background:#4af;width:0"></i></div></div>
@@ -97,7 +149,7 @@ else{const ax=q.rot%2==0,d=DIRS[q.rot];m=new THREE.Mesh(new THREE.BoxGeometry(ax
 function addPiece(type,q,mat,who=p){const k=type=='floor'||type=='cone'?type[0]+q.cx+','+q.cz+','+q.lvl:type[0]+q.cx+','+q.cz+','+q.lvl+','+q.rot;
 if(pmap[k]){if(pmap[k].mat==mat)return false;destroy(pmap[k])}
 if(!(who.isP&&S.infMats)){if(who.mats[mat]<10){if(who.isP)snd(120);return false}who.mats[mat]-=10}
-const M=new THREE.MeshLambertMaterial({color:MAT[mat].c}),P={type,q,mat,k,hp:MAT[mat].hp,max:MAT[mat].hp,tiles:[],owner:who.isP?'player':'bot',M};
+const M=new THREE.MeshLambertMaterial({color:MAT[mat].c}),P={type,q,mat,k,hp:MAT[mat].hp,max:MAT[mat].hp,tiles:[],owner:who.isP?'player':'bot',ownerEnt:who,M};
 if(type=='wall'){const ax=q.rot%2==0,d=DIRS[q.rot],cx=q.cx+d[0]*2,cz=q.cz+d[1]*2,hx=ax?.667:.15,hz=ax?.15:.667;
 for(let i=0;i<3;i++)for(let j=0;j<3;j++){const a=(i-1)*4/3,y=q.lvl+(j+.5)*4/3,x=cx+(ax?a:0),z=cz+(ax?0:a);
 const mesh=new THREE.Mesh(new THREE.BoxGeometry(hx*2,1.31,hz*2),M);mesh.position.set(x,y,z);mesh.castShadow=true;mesh.userData={k:'piece',P};
@@ -154,13 +206,107 @@ const NAMES=['Vex','Nova','Kilo','Rook','Jinx','Onyx','Pyre','Zed','Echo','Lynx'
 function spawnBots(n){for(let i=0;i<n;i++){const g=stick(new THREE.Color().setHSL(Math.random(),.6,.5));const a=Math.random()*6.28,d=50+Math.random()*180,b={pos:new V(Math.cos(a)*d,0,Math.sin(a)*d),vel:new V(),on:1,hp:100,sh:0,mats:{wood:200,brick:50,metal:0},yaw:0,bt:3,ht:0,mesh:g,cd:1+Math.random(),name:NAMES[bots.length%10]+(bots.length>9?bots.length:''),id:Math.random()*9};
 Object.assign(g.userData,{k:'bot',b});scene.add(g);targets.push(g);bots.push(b)}}
 function clearBots(){bots.forEach(b=>{if(!b.dead){b.dead=1;rm(b.mesh)}})}
-function botAI(dt){for(const b of bots){if(b.dead)continue;const dx=p.pos.x-b.pos.x,dz=p.pos.z-b.pos.z,d=Math.hypot(dx,dz)||1;let tx=dx/d,tz=dz/d;
-const out=Math.hypot(b.pos.x-st.cx,b.pos.z-st.cz)>st.r-6;if(out){const sx=st.cx-b.pos.x,sz=st.cz-b.pos.z,l=Math.hypot(sx,sz)||1;tx=sx/l;tz=sz/l}
-const mv=out?1:d<14?-.4:d>30?1:.15,sn=Math.sin(time*.8+b.id)*.6;step(b,dt,tx*mv-tz*sn,tz*mv+tx*sn,5,Math.random()<.008);
-b.mesh.position.copy(b.pos);b.yaw=Math.atan2(-dx,-dz);b.mesh.rotation.y=b.yaw;anim(b.mesh,b,dt,b.cd>.3?'aim':0);b.ht-=dt;b.bt-=dt;if(b.bt<=0&&!out&&d<60){b.bt=2+Math.random()*3;if(p.pos.y>b.pos.y+2.5)addPiece('ramp',pose('ramp',b),'wood',b);else if(b.ht>0){const P=addPiece('wall',pose('wall',b),'wood',b);if(P&&Math.random()<.5)setTimeout(()=>{const t=P.tiles[4];if(t&&t.on&&pmap[P.k]===P)flipTile(P,t)},500)}}
-if(Math.hypot(b.pos.x-st.cx,b.pos.z-st.cz)>st.r)hurt(b,dt*(1+st.ph*1.5),true);
-b.cd-=dt;if(b.cd<=0&&d<80&&!over){b.cd=.45;const o=new V(b.pos.x,b.pos.y+1.4,b.pos.z),t=new V(p.pos.x,p.pos.y+1.2,p.pos.z),dir=t.clone().sub(o).normalize();rc.set(o,dir);rc.far=d;
-const h=rc.intersectObjects(targets,true).find(h=>owner(h.object)&&owner(h.object).k!='bot');if(!h){tracer(o,t.clone().add(new V((Math.random()-.5)*2,0,(Math.random()-.5)*2)),0xff6666);if(Math.random()<.3*S.botAcc)hurt(p,7)}}}}
+function botTarget(b){
+ const all=[p,...bots].filter(e=>!e.dead&&e!==b);
+ let best=null,bd=Infinity;
+ for(const e of all){const d=b.pos.distanceTo(e.pos);if(d<bd){bd=d;best=e}}
+ return best;
+}
+function botLineOfSight(from,to,max){
+ const dir=to.clone().sub(from),dist=dir.length();if(!dist)return true;
+ dir.normalize();rc.set(from,dir);rc.far=max||dist;
+ const h=rc.intersectObjects(targets,true)[0];
+ if(!h)return true;
+ const o=owner(h.object);
+ return o&&(o.k==='bot'&&o.b===to||o.k==='tree'&&false||o.k==='piece'&&false);
+}
+function botEdit(b){
+ const owned=pieces.filter(P=>P.ownerEnt===b&&P.type==='wall'&&P.tiles.some(t=>t.on));
+ if(!owned.length)return;
+ let best=owned[0],bd=Infinity;
+ for(const P of owned){
+  const d=Math.hypot(P.q.cx-b.pos.x,P.q.cz-b.pos.z);
+  if(d<bd){bd=d;best=P}
+ }
+ if(bd<9){
+  const live=best.tiles.filter(t=>t.on);
+  if(live.length>1){
+   const pick=live[(b.editSeed=(b.editSeed||0)+1)%live.length];
+   flipTile(best,pick);
+   if(!best.tiles.some(t=>t.on))destroy(best);
+  }
+ }
+}
+function botBuild(b,target,dist){
+ if(b.buildCd>0)return;
+ b.buildCd=dist<16?.65:1.4;
+ const oldYaw=b.yaw;
+ b.yaw=Math.atan2(-(target.pos.x-b.pos.x),-(target.pos.z-b.pos.z));
+ if(dist<18){
+  addPiece('wall',pose('wall',b),'wood',b);
+  if(Math.random()<.7)addPiece('wall',Object.assign(pose('wall',b),{rot:(pose('wall',b).rot+1)%4}),'wood',b);
+  if(Math.random()<.55)addPiece('ramp',pose('ramp',b),'wood',b);
+ }else if(target.pos.y>b.pos.y+2){
+  addPiece('ramp',pose('ramp',b),'wood',b);
+ }else if(Math.random()<.45){
+  addPiece('floor',pose('floor',b),'wood',b);
+ }
+ b.yaw=oldYaw;
+}
+function botShoot(b,target,dist){
+ if(b.shootCd>0||dist>150||over)return;
+ b.shootCd=.18+Math.random()*.28;
+ const from=new V(b.pos.x,b.pos.y+1.45,b.pos.z);
+ const aim=target.pos.clone();aim.y+=1.25;
+ const lead=Math.min(.22,dist/180);
+ aim.x+=target.vel.x*lead;aim.z+=target.vel.z*lead;
+ const weapon=dist<14?W[2]:dist>75?W[3]:W[1];
+ const spread=weapon.spread*(dist<14?2.2:1.35)*(1.25-Math.min(.35,S.botAcc*.12));
+ const missChance=Math.max(.08,.42-S.botAcc*.08);
+ const shouldMiss=Math.random()<missChance;
+ const dir=aim.clone().sub(from).normalize();
+ dir.x+=(Math.random()-.5)*spread*(shouldMiss?5:1);
+ dir.y+=(Math.random()-.5)*spread*(shouldMiss?3:1);
+ dir.z+=(Math.random()-.5)*spread*(shouldMiss?5:1);
+ dir.normalize();
+ rc.set(from,dir);rc.far=dist+8;
+ const hit=rc.intersectObjects(targets,true)[0];
+ const end=hit?hit.point.clone():from.clone().addScaledVector(dir,Math.min(weapon.rng,dist+8));
+ tracer(from,end,0xff6666);
+ if(hit){
+  const o=owner(hit.object);
+  if(o&&o.k==='bot'&&o.b===target){
+   let dmg=weapon.dmg*(1-Math.min(.45,dist/weapon.rng*.4));
+   if(weapon===W[2])dmg*=.65;
+   o.b.killer=b.name;
+   hurt(o.b,dmg);
+  }else if(o&&o.k==='player'){
+   hurt(p,weapon===W[2]?35:weapon===W[2]?18:7);
+  }else if(o&&o.k==='piece')dmgPiece(o.P,weapon.dmg*.18,false);
+ }
+}
+function botAI(dt){
+ for(const b of bots){
+  if(b.dead)continue;
+  b.buildCd=(b.buildCd||0)-dt;b.shootCd=(b.shootCd||0)-dt;b.editCd=(b.editCd||0)-dt;
+  const target=botTarget(b);if(!target)continue;
+  const dx=target.pos.x-b.pos.x,dz=target.pos.z-b.pos.z,dist=Math.hypot(dx,dz)||1;
+  let tx=dx/dist,tz=dz/dist;
+  const out=Math.hypot(b.pos.x-st.cx,b.pos.z-st.cz)>st.r-8;
+  if(out){const sx=st.cx-b.pos.x,sz=st.cz-b.pos.z,l=Math.hypot(sx,sz)||1;tx=sx/l;tz=sz/l}
+  const strafe=Math.sin(time*(.9+(b.id%3)*.17)+b.id)*.75;
+  let mv=out?1:dist<10?-.75:dist>42?1:.18;
+  if(Math.random()<.018)b.jumpUntil=.16;
+  const wx=tx*mv-tz*strafe,wz=tz*mv+tx*strafe;
+  step(b,dt,wx,wz,5.2,b.jumpUntil>0);b.jumpUntil=Math.max(0,(b.jumpUntil||0)-dt);
+  b.mesh.position.copy(b.pos);b.yaw=Math.atan2(-dx,-dz);b.mesh.rotation.y=b.yaw;
+  anim(b.mesh,b,dt,dist<65?'aim':0);
+  if(!out&&dist<55)botBuild(b,target,dist);
+  if(b.editCd<=0&&dist<24){b.editCd=2.2+Math.random()*2.5;botEdit(b)}
+  if(!out)botShoot(b,target,dist);
+  if(Math.hypot(b.pos.x-st.cx,b.pos.z-st.cz)>st.r)hurt(b,dt*(1+Math.max(0,st.ph)*1.5),true);
+ }
+}
 // ---- storm
 const PH=[200,110,50,15],st={cx:0,cz:0,r:300,tx:0,tz:0,ph:-1,t:25,shr:0,tot:30,fr:null,tr:300};
 const sm=new THREE.Mesh(new THREE.CylinderGeometry(1,1,260,64,1,true),new THREE.MeshBasicMaterial({color:0x8a3cff,transparent:true,opacity:.28,side:THREE.DoubleSide,depthWrite:false}));sm.position.y=100;scene.add(sm);
@@ -168,10 +314,26 @@ function storm(dt){if(!S.stormPause){st.t-=dt;
 if(!st.shr&&st.t<=0&&st.ph<PH.length-1){st.ph++;st.fr={cx:st.cx,cz:st.cz,r:st.r};st.tr=PH[st.ph];const a=Math.random()*6.28,d=Math.random()*(st.r-st.tr)*.8;st.tx=st.cx+Math.cos(a)*d;st.tz=st.cz+Math.sin(a)*d;st.shr=1;st.t=st.tot}
 else if(st.shr){const k=1-Math.max(0,st.t)/st.tot;st.r=st.fr.r+(st.tr-st.fr.r)*k;st.cx=st.fr.cx+(st.tx-st.fr.cx)*k;st.cz=st.fr.cz+(st.tz-st.fr.cz)*k;if(st.t<=0){st.shr=0;st.t=25}}}
 sm.position.x=st.cx;sm.position.z=st.cz;sm.scale.set(st.r,1,st.r);if(Math.hypot(p.pos.x-st.cx,p.pos.z-st.cz)>st.r)hurt(p,dt*(1+Math.max(0,st.ph)*1.5),true)}
+
+let gameStarted=false;
+function selectMode(el){document.querySelectorAll('.mode').forEach(x=>x.classList.remove('sel'));el.classList.add('sel');$('lobbyStatus').textContent=el.innerText.split('\n')[0]+' · READY';}
+function lobbyTab(name,btn){
+ document.querySelectorAll('.lnav button').forEach(x=>x.classList.remove('on'));btn.classList.add('on');
+ if(name==='PLAY')return;
+ $('lobbyStatus').textContent=name+' · RIFT LOBBY';
+}
+function beginGame(){
+ gameStarted=true;
+ $('lobby').style.display='none';
+ AC.resume();
+ $('start').style.display='none';
+ setTimeout(()=>R.domElement.requestPointerLock(),80);
+}
+
 // ---- input
 const ed_el=$('edit');for(let i=0;i<9;i++)ed_el.appendChild(document.createElement('div'));let ed=null;
 document.addEventListener('pointerlockchange',()=>{if(document.pointerLockElement){$('start').style.display='none';$('menu').style.display='none'}else if($('start').style.display=='none'&&!over&&$('f13').style.display!='block'){showTab(nextTab||tab);nextTab=null;$('menu').style.display='flex'}});
-$('start').onclick=()=>{AC.resume();R.domElement.requestPointerLock()};R.domElement.onclick=()=>{if(!over&&$('f13').style.display!='block')R.domElement.requestPointerLock()};
+$('start').onclick=beginGame;R.domElement.onclick=()=>{if(!over&&$('f13').style.display!='block')R.domElement.requestPointerLock()};
 addEventListener('mousemove',e=>{if(!document.pointerLockElement)return;
 if(ed){ed.x=Math.max(0,Math.min(179,ed.x+e.movementX));ed.y=Math.max(0,Math.min(179,ed.y+e.movementY));return}
 p.yaw-=e.movementX*.0022*cfg.sens;p.pitch=Math.max(-1.4,Math.min(1.4,p.pitch-e.movementY*.0022*cfg.sens))});
@@ -216,7 +378,7 @@ Object.assign(o,{on:1,lx:dz(g.axes[0]),ly:dz(g.axes[1]),rx:dz(g.axes[2]),ry:dz(g
 ed2(2,reload);ed2(3,()=>build=!build);ed2(4,()=>cyc(-1));ed2(5,()=>cyc(1));[12,13,14,15].forEach((i,n)=>ed2(i,()=>{btype=['wall','floor','ramp','cone'][n];build=true}));return o}
 applyCfg();
 // ---- loop
-const mm=$('mm').getContext('2d');let last=performance.now(),fc=0,ft=0,hf=0;spawnBots(8);
+const mm=$('mm').getContext('2d');let last=performance.now(),fc=0,ft=0,hf=0;spawnBots(8);$('lobbyStatus').textContent='MATCHMAKING · '+(bots.length+1)+' PLAYERS';
 function loop(now){requestAnimationFrame(loop);if(cfg.fps&&now-last<1000/cfg.fps-1)return;let dt=Math.min(.05,(now-last)/1000);last=now;time+=dt;fc++;ft+=dt;if(ft>.5){$('fps').textContent=Math.round(fc/ft)+' FPS · 0 ms';fc=ft=0}
 if(!over){
 const G=pad();if(G.on)ads=!!G.ads;const f=Math.max(-1,Math.min(1,(keys[K.f]?1:0)-(keys[K.b]?1:0)-G.ly)),s=Math.max(-1,Math.min(1,(keys[K.r]?1:0)-(keys[K.l]?1:0)+G.lx)),fx=-Math.sin(p.yaw),fz=-Math.cos(p.yaw),rx=Math.cos(p.yaw),rz=-Math.sin(p.yaw);
