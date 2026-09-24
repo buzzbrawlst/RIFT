@@ -281,7 +281,7 @@ function botShoot(b,target,dist){
    o.b.killer=b.name;
    hurt(o.b,dmg);
   }else if(o&&o.k==='player'){
-   hurt(p,weapon===W[2]?35:weapon===W[2]?18:7);
+   hurt(p,weapon===W[3]?35:weapon===W[2]?18:7);
   }else if(o&&o.k==='piece')dmgPiece(o.P,weapon.dmg*.18,false);
  }
 }
@@ -380,7 +380,7 @@ applyCfg();
 // ---- loop
 const mm=$('mm').getContext('2d');let last=performance.now(),fc=0,ft=0,hf=0;spawnBots(8);$('lobbyStatus').textContent='MATCHMAKING · '+(bots.length+1)+' PLAYERS';
 function loop(now){requestAnimationFrame(loop);if(cfg.fps&&now-last<1000/cfg.fps-1)return;let dt=Math.min(.05,(now-last)/1000);last=now;time+=dt;fc++;ft+=dt;if(ft>.5){$('fps').textContent=Math.round(fc/ft)+' FPS · 0 ms';fc=ft=0}
-if(!over){
+if(gameStarted&&!over){
 const G=pad();if(G.on)ads=!!G.ads;const f=Math.max(-1,Math.min(1,(keys[K.f]?1:0)-(keys[K.b]?1:0)-G.ly)),s=Math.max(-1,Math.min(1,(keys[K.r]?1:0)-(keys[K.l]?1:0)+G.lx)),fx=-Math.sin(p.yaw),fz=-Math.cos(p.yaw),rx=Math.cos(p.yaw),rz=-Math.sin(p.yaw);
 let wx=fx*f+rx*s,wz=fz*f+rz*s;const l=Math.hypot(wx,wz);if(l>1){wx/=l;wz/=l}
 p.yaw-=G.rx*dt*2.5*cfg.sens;p.pitch=Math.max(-1.4,Math.min(1.4,p.pitch-G.ry*dt*2*cfg.sens));const crouch=(keys[K.crouch]||G.crouch)&&!S.fly;step(p,dt,wx,wz,(crouch?3:(keys[K.sprint]||G.sprint)&&f>0?9.5:6.5)*S.speed,keys[K.jump]||G.jump);Net.send({dt,f,s,yaw:p.yaw});p.fs=(p.fs||0)-dt*Math.hypot(p.vel.x,p.vel.z);if(p.fs<0&&p.on){p.fs=2.2;noise(.05,900,.05)}
