@@ -1,0 +1,1 @@
+export {start,destroy} from "./battleRoyale.js";
